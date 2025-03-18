@@ -1,4 +1,4 @@
-﻿# Open Api
+﻿# OpenApi
 Вызывать из папки DeliveryApp.Api/Adapters/Http/Contract
 ```
 cd DeliveryApp.Api/Adapters/Http/Contract/
