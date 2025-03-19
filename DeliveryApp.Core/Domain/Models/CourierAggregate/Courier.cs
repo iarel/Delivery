@@ -28,14 +28,14 @@ public class Courier : Aggregate
 
     public Result<Courier, Error> SetStatusToBusy()
     {
-        if (Status == CourierStatus.Busy) return GeneralErrors.ValueIsRequired(nameof(Status));
+        if (Status == CourierStatus.Busy) return Errors.CantSetStatusToBusyWhenAlreadyBusy();
         Status = CourierStatus.Busy;
         return this;
     }
 
     public Result<Courier, Error> SetStatusToFree()
     {
-        if (Status == CourierStatus.Free) return GeneralErrors.ValueIsRequired(nameof(Status));
+        if (Status == CourierStatus.Free) return Errors.CantSetStatusToFreeWhenAlreadyFree();
         Status = CourierStatus.Free;
         return this;
     }
@@ -70,5 +70,20 @@ public class Courier : Aggregate
         if (location == null) return GeneralErrors.ValueIsRequired(nameof(location));
 
         return new Courier(id, name, transport, location);
+    }
+
+    public static class Errors
+    {
+        public static Error CantSetStatusToBusyWhenAlreadyBusy()
+        {
+            return new Error($"{nameof(Courier).ToLowerInvariant()}.cant.set.status.to.busy.when.already.busy",
+                "Cannot set courier status to busy when already busy");
+        }
+
+        public static Error CantSetStatusToFreeWhenAlreadyFree()
+        {
+            return new Error($"{nameof(Courier).ToLowerInvariant()}.cant.set.status.to.free.when.already.free",
+                "Cannot set courier status to free when already free");
+        }
     }
 }

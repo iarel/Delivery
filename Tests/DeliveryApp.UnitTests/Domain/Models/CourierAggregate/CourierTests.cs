@@ -87,7 +87,46 @@ public class CourierTests
 
         // Assert
         result.IsFailure.Should().BeTrue();
-        result.Error.Should().Be(GeneralErrors.ValueIsRequired(nameof(courier.Status)));
+        result.Error.Should().Be(Courier.Errors.CantSetStatusToBusyWhenAlreadyBusy());
+    }
+
+    [Fact]
+    public void SetStatusToFree_WhenBusy_ShouldChangeStatus()
+    {
+        // Arrange
+        var courier = Courier.Create(
+            Guid.NewGuid(),
+            "John Doe",
+            Transport.Create(2, "Bicycle").Value,
+            Location.Create(1, 1).Value
+        ).Value;
+        courier.SetStatusToBusy();
+
+        // Act
+        var result = courier.SetStatusToFree();
+
+        // Assert
+        result.IsSuccess.Should().BeTrue();
+        result.Value.Status.Should().Be(CourierStatus.Free);
+    }
+
+    [Fact]
+    public void SetStatusToFree_WhenAlreadyFree_ShouldReturnFailure()
+    {
+        // Arrange
+        var courier = Courier.Create(
+            Guid.NewGuid(),
+            "John Doe",
+            Transport.Create(2, "Bicycle").Value,
+            Location.Create(1, 1).Value
+        ).Value;
+
+        // Act
+        var result = courier.SetStatusToFree();
+
+        // Assert
+        result.IsFailure.Should().BeTrue();
+        result.Error.Should().Be(Courier.Errors.CantSetStatusToFreeWhenAlreadyFree());
     }
 
     [Fact]

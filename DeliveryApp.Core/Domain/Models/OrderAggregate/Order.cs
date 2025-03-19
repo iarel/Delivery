@@ -70,5 +70,11 @@ public class Order : Aggregate
             return new Error($"{nameof(Order).ToLowerInvariant()}.cant.assign.already.assigned.order",
                 $"Нельзя назначить уже назначенный заказ {courierId} ");
         }
+
+        public static Error CantAssignNotCreatedOrder()
+        {
+            return new Error($"{nameof(Order).ToLowerInvariant()}.cant.assign.not.created.order",
+                "Нельзя назначить не созданный заказ");
+        }
     }
 }
