@@ -1,4 +1,6 @@
 using CSharpFunctionalExtensions;
+using DeliveryApp.Core.Domain.SharedKernel;
+using Primitives;
 
 namespace DeliveryApp.Core.Domain.Models.CourierAggregate;
 
@@ -26,4 +28,23 @@ public class Transport : Entity<Guid>
         var transport = new Transport(speed, name);
         return Result.Success(transport);
     }
+
+        public Result<Location, Error> Move(Location current, Location target)
+    {
+        if (current == null) return GeneralErrors.ValueIsRequired(nameof(current));
+        if (target == null) return GeneralErrors.ValueIsRequired(nameof(target));
+
+        var difX = target.X - current.X;
+        var difY = target.Y - current.Y;
+        var cruisingRange = Speed;
+
+        var moveX = Math.Clamp(difX, -cruisingRange, cruisingRange);
+        cruisingRange -= Math.Abs(moveX);
+
+        var moveY = Math.Clamp(difY, -cruisingRange, cruisingRange);
+
+        var newLocation = Location.Create(current.X + moveX, current.Y + moveY).Value;
+        return newLocation;
+    }
+
 }

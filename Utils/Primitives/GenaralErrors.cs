@@ -47,4 +47,9 @@ public static class GeneralErrors
     {
         return new Error("internal.server.error", message);
     }
+
+    public static Error CantMoveBusyCourier()
+    {
+        return new Error("courier.cant.move.busy", "Cannot move a courier that is currently busy");
+    }
 }
