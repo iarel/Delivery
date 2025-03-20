@@ -72,6 +72,12 @@ public class Courier : Aggregate
         return new Courier(id, name, transport, location);
     }
 
+    public static Courier Create()
+    {
+        throw new NotImplementedException();
+    }
+
+
     public static class Errors
     {
         public static Error CantSetStatusToBusyWhenAlreadyBusy()
