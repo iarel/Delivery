@@ -4,12 +4,15 @@ namespace DeliveryApp.Core.Domain.SharedKernel;
 
 public class Location : ValueObject
 {
+    private const int _minLocation = 1;
+    private const int _maxLocation = 10;
+
     public int X { get; }
     public int Y { get; }
 
-    public static Location MaxLocation = new Location(10, 10);
+    public static Location MaxLocation = new Location(_maxLocation, _maxLocation);
 
-    public static Location MinLocation = new Location(1, 1);
+    public static Location MinLocation = new Location(_minLocation, _minLocation);
 
     private static readonly Random _random = new Random();
     
@@ -42,10 +45,10 @@ public class Location : ValueObject
 
     public static Result<Location> Create(int x, int y)
     {
-        if (x < 1 || x > 10)
+        if (x < _minLocation || x > _maxLocation)
             return Result.Failure<Location>("X must be between 1 and 10");
 
-        if (y < 1 || y > 10) 
+        if (y < _minLocation || y > _maxLocation)
             return Result.Failure<Location>("Y must be between 1 and 10");
 
         return Result.Success(new Location(x, y));
