@@ -2,7 +2,7 @@ using System;
 
 namespace DeliveryApp.Core.Application.UseCases.Commands;
 
-public class CreateBasketCommand
+public class CreateDeliveryCommand
 {
     public Guid BasketId { get; }
 
