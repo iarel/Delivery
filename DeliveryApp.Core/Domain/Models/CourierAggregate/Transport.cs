@@ -4,6 +4,10 @@ namespace DeliveryApp.Core.Domain.Models.CourierAggregate;
 
 public class Transport : Entity<Guid>
 {
+    private const int _minSpeed = 1;
+
+    private const int _maxSpeed = 3;
+
     public int Speed { get; private set; }
  
     public string Name { get; private set; }
@@ -17,8 +21,8 @@ public class Transport : Entity<Guid>
 
     public static Result<Transport> Create(int speed, string name)
     {
-        if (speed < 1 || speed > 3)
-            return Result.Failure<Transport>("Speed must be between 1 and 3");
+        if (speed < _minSpeed || speed > _maxSpeed)
+            return Result.Failure<Transport>($"Speed must be between {_minSpeed} and {_maxSpeed}");
 
         if (string.IsNullOrWhiteSpace(name))
             return Result.Failure<Transport>("Name must be provided");
