@@ -1,4 +1,5 @@
 using CSharpFunctionalExtensions;
+using Primitives;
 
 namespace DeliveryApp.Core.Domain.SharedKernel;
 
@@ -21,8 +22,10 @@ public class Location : ValueObject
         return new Location(_random.Next(1, 11), _random.Next(1, 11));
     }
 
-    public int CalculateDistanceTo(Location other)
+    public Result<int, Primitives.Error> CalculateDistanceTo(Location other)
     {
+        if (other == null) return GeneralErrors.ValueIsRequired(nameof(other));
+
         var horizontalDistance = Math.Abs(X - other.X);
         var verticalDistance = Math.Abs(Y - other.Y);
         
