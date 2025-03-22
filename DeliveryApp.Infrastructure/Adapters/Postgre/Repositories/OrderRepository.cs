@@ -41,11 +41,9 @@ public class OrderRepository : IOrderRepository
         return order;
     }
 
-    public IEnumerable<Order> GetAllAssigned()
-    {
-        var orders = _dbContext
+    public async Task<IEnumerable<Order>> GetAllAssigned()
+        => await _dbContext
             .Orders
-            .Where(o => o.Status.Name == OrderStatus.Assigned.Name);
-        return orders;
-    }
+            .Where(o => o.Status.Name == OrderStatus.Assigned.Name)
+            .ToListAsync();
 }

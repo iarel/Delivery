@@ -20,7 +20,7 @@ public class MoveCouriersHandler : IRequestHandler<MoveCouriersCommand, UnitResu
 
     public async Task<UnitResult<Error>> Handle(MoveCouriersCommand command, CancellationToken cancellationToken)
     {
-        var assignedOrders = _orderRepository.GetAllAssigned();
+        var assignedOrders = await _orderRepository.GetAllAssigned();
 
         foreach (var order in assignedOrders)
         {
