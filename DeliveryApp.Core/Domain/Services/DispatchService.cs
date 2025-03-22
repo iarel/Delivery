@@ -11,32 +11,21 @@ public class DispatchService : IDispatchService
     {
         if (order == null) return GeneralErrors.ValueIsRequired("order");
         if (couriers == null) return GeneralErrors.ValueIsRequired("couriers");
+        if (order.Status != OrderStatus.Created) return Order.Errors.CantAssignNotCreatedOrder();
 
-        if (order.Status != OrderStatus.Created)
-            return Order.Errors.CantAssignNotCreatedOrder();
+        var courierWithHighestScore = TakeWithHighestScore(couriers, order);
+        if (courierWithHighestScore == null) return GeneralErrors.ValueIsRequired("courier");
 
-
-        var courier = couriers.Where(c => c.Status == CourierStatus.Free);
-
-        var courierWinner = TakeWithHighestScore(courier, order);
-
-        if (courierWinner == null) return GeneralErrors.ValueIsRequired("courier");
+        var assignResult = order.Assign(courierWithHighestScore);
+        if (assignResult.IsFailure) return assignResult.Error;
 
         return Result.Success<Order, Error>(order);
     }
     
     private Courier TakeWithHighestScore(IEnumerable<Courier> couriers, Order order)
-    {
-        var courierScores = new Dictionary<double, Courier>();
-        foreach (var courier in couriers)
-        {
-            var timeToLocation = courier.CalculateTimeToLocation(order.Location);
-            if (timeToLocation.IsSuccess)
-            {
-                courierScores.Add(timeToLocation.Value, courier);
-            }
-        }
-
-        return courierScores.OrderBy(x => x.Key).First().Value;
-    }
+        => couriers
+            .Where(c => c.Status == CourierStatus.Free)
+            .Select(courier => (courier, timeToLocation: courier.CalculateTimeToLocation(order.Location)))
+            .Where(tuple => tuple.timeToLocation.IsSuccess)
+            .MaxBy(tuple => tuple.timeToLocation.Value).courier;
 }

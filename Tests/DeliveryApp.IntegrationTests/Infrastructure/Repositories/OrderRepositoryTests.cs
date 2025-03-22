@@ -94,7 +94,7 @@ public class OrderRepositoryTests : BaseRepositoryTests
         await DbContext.SaveChangesAsync();
 
         // Act
-        var assignedOrders = _repository.GetAllAssigned().ToList();
+        var assignedOrders = (await _repository.GetAllAssigned()).ToList();
 
         // Assert
         assignedOrders.Should().HaveCount(2);

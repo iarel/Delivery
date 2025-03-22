@@ -66,7 +66,7 @@ public class CourierRepositoryTests : BaseRepositoryTests
         await DbContext.SaveChangesAsync();
 
         // Act
-        var freeCouriers = _repository.GetAllFree().ToList();
+        var freeCouriers = (await _repository.GetAllFree()).ToList();
 
         // Assert
         freeCouriers.Should().HaveCount(2);
