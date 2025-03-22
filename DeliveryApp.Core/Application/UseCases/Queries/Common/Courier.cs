@@ -8,5 +8,5 @@ public class Courier
 
     public Location Location { get; set; }
 
-    public int TransportId { get; set; }
+    public Guid TransportId { get; set; }
 } 

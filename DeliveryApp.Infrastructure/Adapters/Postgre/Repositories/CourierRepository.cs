@@ -28,12 +28,20 @@ public class CourierRepository : ICourierRepository
             .FirstOrDefaultAsync(o => o.Id == courierId);
         return courier;
     }
-    public IEnumerable<Courier> GetAllFree()
+    public async Task<IEnumerable<Courier>> GetAllFree()
     {
-        var couriers = _dbContext
+        return await _dbContext
+            .Couriers
+            .Where(o => o.Status.Name == CourierStatus.Free.Name)
+            .Include(x => x.Transport)
+            .ToListAsync();
+    }
+    
+    public async Task<IEnumerable<Courier>> GetAllAsync()
+    {
+        return await _dbContext
             .Couriers
             .Include(x => x.Transport)
-            .Where(o => o.Status.Name == CourierStatus.Free.Name);
-        return couriers;
+            .ToListAsync();
     }
 }
